@@ -53,6 +53,7 @@ class Quiz(UserList):
         if not Path("sheets_header.tex").exists():
             shutil.copy(latex_templates_path / 'sheets_header.tex', '.')
             print('Generating a default sheets_header.tex file. Please edit this file to suit your needs.')
+
             
         # N.B. will not do picture and puzzle rounds, these must be contained in pictures.tex and puzzles.tex
         titlepage = (
@@ -86,7 +87,10 @@ class Quiz(UserList):
         )
 
         # Header
-        lines = [r"\input{sheets_header}", r"\begin{document}"]
+        lines = [r"\input{sheets_header}"]
+        if not answers:
+            lines += [r"\rhead{\huge \fbox{\parbox{3.5cm}{Score}}}"]
+        lines += [r"\begin{document}"]
 
         if not answers:
             lines += titlepage
