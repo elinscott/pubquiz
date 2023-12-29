@@ -33,16 +33,17 @@ def main():
     """CLI for pubquiz."""
 
 
-valid_outputs=['question_sheets', 'answer_sheets', 'slides']
+valid_outputs = ["question_sheets", "answer_sheets", "slides"]
+
 
 # Make a pub quiz from a yaml file
 @main.command()
 @click.argument("yaml_file", type=click.Path(exists=True))
-@click.argument("output", type=click.Choice(valid_outputs + ['all']), default="all")
-@click.option('--no-compile', default=False, help='Do not compile the output files.')
+@click.argument("output", type=click.Choice(valid_outputs + ["all"]), default="all")
+@click.option("--no-compile", default=False, help="Do not compile the output files.")
 def make(yaml_file, output, no_compile):
     """Make a pub quiz from a yaml file."""
-    if output == 'all':
+    if output == "all":
         outputs = valid_outputs
     else:
         outputs = [output]
@@ -50,17 +51,18 @@ def make(yaml_file, output, no_compile):
     quiz = Quiz.from_yaml(yaml_file)
 
     for o in outputs:
-        if o == 'question_sheets':
+        if o == "question_sheets":
             string = quiz.to_sheets()
-        if o == 'answer_sheets':
+        if o == "answer_sheets":
             string = quiz.to_sheets(with_answers=True)
-        elif o == 'slides':
+        elif o == "slides":
             string = quiz.to_slides()
-        with open(f'{o}.tex', 'w') as f:
+        with open(f"{o}.tex", "w") as f:
             f.write(string)
-    
+
         if not no_compile:
-            subprocess.run(['pdflatex', f'{o}.tex'], stdout=subprocess.DEVNULL)
+            subprocess.run(["pdflatex", f"{o}.tex"], stdout=subprocess.DEVNULL)  # noqa: S607
+
 
 if __name__ == "__main__":
     main()

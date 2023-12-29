@@ -63,4 +63,4 @@ class Question:
                 lines += [r"\\", r"\onslide<2->{\vspace{1em}\textit{" + self.answer + "}}"]
         lines += [r"\end{center}", r"\end{frame}"]
 
-        return '\n'.join(lines)
+        return "\n".join(lines)

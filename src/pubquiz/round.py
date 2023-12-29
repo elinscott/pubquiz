@@ -10,7 +10,13 @@ from pubquiz.question import Question
 class Round(UserList):
     """Class representing a round in a pub quiz."""
 
-    def __init__(self, title, description="", questions: Optional[List[Question]] = None, sheet: Optional[List[str]] = None):
+    def __init__(
+        self,
+        title,
+        description="",
+        questions: Optional[List[Question]] = None,
+        sheet: Optional[List[str]] = None,
+    ):
         """Initialize the round."""
         questions = questions or []
         super().__init__(questions)
@@ -36,8 +42,7 @@ class Round(UserList):
             r"\newpage",
             r"\begin{center}",
             r"\Huge",
-            f"Round {index}: {self.title}"
-            r"\end{center}",
+            f"Round {index}: {self.title}" r"\end{center}",
             r"\LARGE",
         ]
         if len(self.description) > 0:
