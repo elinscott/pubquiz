@@ -14,9 +14,9 @@ jobs:
       matrix:
         python-version: [ "3.11", "3.8" ]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
       - name: Install dependencies
@@ -38,9 +38,9 @@ jobs:
       matrix:
         python-version: [ "3.11", "3.8" ]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
       - name: Install dependencies
@@ -61,9 +61,9 @@ jobs:
         os: [ ubuntu-latest ]
         python-version: [ "3.11", "3.8" ]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
       - name: Install dependencies
@@ -72,7 +72,7 @@ jobs:
         run:
           tox run -e py
       - name: Upload coverage report to codecov
-        uses: codecov/codecov-action@v1
+        uses: codecov/codecov-action@v3
         if: success()
         with:
           file: coverage.xml
