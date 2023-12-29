@@ -61,7 +61,7 @@ def make(yaml_file, output, no_compile):
             f.write(string)
 
         if not no_compile:
-            subprocess.run(["pdflatex", f"{o}.tex"], stdout=subprocess.DEVNULL)  # noqa: S607
+            subprocess.run(["pdflatex", f"{o}.tex"])  # noqa: S607
 
 
 if __name__ == "__main__":

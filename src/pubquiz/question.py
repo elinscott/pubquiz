@@ -17,6 +17,12 @@ class Question:
     answer_pic: Optional[Path] = None
     answer_pic_height: float = 0.6
 
+    def __post_init__(self):
+        if Path(self.question).exists():
+            self.question = r"\input{" + self.question + "}"
+        if self.slide and Path(self.slide).exists():
+            self.slide = r"\input{" + self.slide + "}"
+
     def __repr__(self):
         return self.question + " (" + self.answer + ")"
 
@@ -36,7 +42,7 @@ class Question:
             pic = r"\vspace{0.5em}"
             pic += (
                 r"\includegraphics[height="
-                + self.question_pic_height
+                + str(self.question_pic_height)
                 + r"\paperheight]{"
                 + self.question_pic
                 + "}"
@@ -50,7 +56,7 @@ class Question:
                 pic = r"\vspace{0.5em}"
                 pic += (
                     r"\includegraphics[height="
-                    + self.answer_pic_height
+                    + str(self.answer_pic_height)
                     + r"\paperheight]{"
                     + self.answer_pic
                     + "}"
@@ -59,8 +65,10 @@ class Question:
                     lines += [r"\only<2>{" + pic + "}"]
                 else:
                     lines += [r"\\", r"\onslide<2>{" + pic + "}"]
+            if r"\input" not in lines[-1]:
+                lines += [r"\\"]
             if self.answer:
-                lines += [r"\\", r"\onslide<2->{\vspace{1em}\textit{" + self.answer + "}}"]
+                lines += [r"\onslide<2->{\vspace{1em}\textit{" + self.answer + "}}"]
         lines += [r"\end{center}", r"\end{frame}"]
 
         return "\n".join(lines)

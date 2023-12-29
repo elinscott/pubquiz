@@ -135,27 +135,7 @@ class Quiz(UserList):
 
         # Loop over rounds and generate slides
         for i, r in enumerate(self):
-            # Questions
-            lines += [
-                r"\begin{frame}",
-                r"\begin{center}",
-                r"\Huge",
-                f"Round {i+1}: {r.title}",
-                r"\end{center}",
-                r"\end{frame}",
-            ]
-            lines += r.to_slides(with_answers=False)
-
-            # Answers
-            lines += [
-                r"\begin{frame}",
-                r"\begin{center}",
-                r"\Huge",
-                "Answers",
-                r"\end{center}",
-                r"\end{frame}",
-            ]
-            lines += r.to_slides(with_answers=True)
+            lines += r.to_slides(index=i + 1)
 
         # Footer
         lines += [r"\include{picture_slides}"]
