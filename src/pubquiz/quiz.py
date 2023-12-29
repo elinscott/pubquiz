@@ -39,7 +39,7 @@ class Quiz(UserList):
             dct = safe_load(f)
         return cls.from_dict(dct)
 
-    def to_sheets(self, answers=False):
+    def to_sheets(self, with_answers=False) -> str:
         """
         Generate the latex code for the quiz sheets.
 
@@ -76,8 +76,6 @@ class Quiz(UserList):
             ]
             + [r.title + r" & \\" for r in self]
             + [
-                r"Picture: Overpaid & \\",
-                r"Puzzles: Connect four & \\",
                 r"TOTAL \\",
                 r"\hline",
                 r"\end{tabular}",
@@ -88,57 +86,23 @@ class Quiz(UserList):
 
         # Header
         lines = [r"\input{sheets_header}"]
-        if not answers:
+        if not with_answers:
             lines += [r"\rhead{\huge \fbox{\parbox{3.5cm}{Score}}}"]
         lines += [r"\begin{document}"]
 
-        if not answers:
+        if not with_answers:
             lines += titlepage
 
         # Standard rounds
         for i, r in enumerate(self):
-            lines += [
-                r"\newpage",
-                r"\begin{center}",
-                r"\Huge",
-                "Round {0}: {1}".format(i + 1, r.title),
-                r"\end{center}",
-                r"\LARGE",
-            ]
-            if len(r.description) > 0:
-                if not answers:
-                    lines += [r"\vspace{-1cm}"]
-                lines += [r.description]
-            if answers:
-                lines += [r"\large", r"\begin{enumerate}"]
-                lines += [r"\item " + str(q) for q in r]
-                lines += [r"\end{enumerate}", r"\LARGE"]
-            else:
-                lines += [r"\Huge", r"\begin{enumerate}"]
-                lines += [r"\item" for q in r]
-                lines += [r"\end{enumerate}", ""]
-
-        # # Picture and puzzle
-        # for _ in ["pictures", "puzzles"]:
-        #     # if answers:
-        #     #     os.system(f"cp {r}.tex {r}_with_answers.tex")
-        #     #     os.system(f"sed -i -e 's/%%//g' {r}_with_answers.tex")
-        #     #     os.system(f"sed -i -e 's/Large/large/g' {r}_with_answers.tex")
-        #     #     r += "_with_answers"
-        #     # lines += [r"\newpage", r"\Huge", "\input{" + r + ".tex}"]
+            lines += r.to_sheets(with_answers=with_answers, index=i + 1)
 
         # Footer
         lines += [r"\end{document}"]
 
-        # if answers:
-        #    fname = "questions.tex"
-        # else:
-        #    fname = "answer_sheets.tex"
-        # with open(fname, "w") as f:
-        #    f.write("\n".join(lines))
         return '\n'.join(lines)
 
-    def to_slides(self):
+    def to_slides(self) -> str:
         """Generate the latex code for the quiz slides."""
 
         # Ensure we have the header and preamble
@@ -156,9 +120,9 @@ class Quiz(UserList):
         lines = [r"\input{slides_header}", r"\title{" + self.title + "}", r"\author{" + self.author + "}"]
         date = self.date or r"\today"
         lines += [r"\date{" + date + "}"]
-        lines += [r"\begin{document}", r"\include{slides_preamble}", r"\frame{\titlepage}"]
+        lines += [r"\begin{document}", r"\frame{\titlepage}", r"\include{slides_preamble}"]
 
-        # Standard rounds
+        # Loop over rounds and generate slides
         for i, r in enumerate(self):
             # Questions
             lines += [
@@ -169,8 +133,7 @@ class Quiz(UserList):
                 r"\end{center}",
                 r"\end{frame}",
             ]
-            for iq, q in enumerate(r):
-                lines.append(q.to_slide(index=iq + 1))
+            lines += r.to_slides(with_answers=False)
 
             # Answers
             lines += [
@@ -181,10 +144,7 @@ class Quiz(UserList):
                 r"\end{center}",
                 r"\end{frame}",
             ]
-            if r.title == "Underworked":
-                continue
-            for iq, q in enumerate(r):
-                lines.append(q.to_slide(index=iq + 1, with_answer=True))
+            lines += r.to_slides(with_answers=True)
 
         # Footer
         lines += [r"\include{picture_slides}"]

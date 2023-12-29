@@ -14,6 +14,7 @@ later, but that will cause problems--the code will get executed twice:
 """
 
 import logging
+import subprocess
 
 import click
 
@@ -38,7 +39,8 @@ valid_outputs=['question_sheets', 'answer_sheets', 'slides']
 @main.command()
 @click.argument("yaml_file", type=click.Path(exists=True))
 @click.argument("output", type=click.Choice(valid_outputs + ['all']), default="all")
-def make(yaml_file, output):
+@click.option('--no-compile', default=False, help='Do not compile the output files.')
+def make(yaml_file, output, no_compile):
     """Make a pub quiz from a yaml file."""
     if output == 'all':
         outputs = valid_outputs
@@ -51,11 +53,14 @@ def make(yaml_file, output):
         if o == 'question_sheets':
             string = quiz.to_sheets()
         if o == 'answer_sheets':
-            string = quiz.to_sheets(answers=True)
+            string = quiz.to_sheets(with_answers=True)
         elif o == 'slides':
             string = quiz.to_slides()
         with open(f'{o}.tex', 'w') as f:
             f.write(string)
+    
+        if not no_compile:
+            subprocess.run(['pdflatex', f'{o}.tex'], stdout=subprocess.DEVNULL)
 
 if __name__ == "__main__":
     main()

@@ -33,31 +33,26 @@ Python utilities for writing pub quizzes
 
 ## 💪 Getting Started
 
-> TODO show in a very small amount of space the **MOST** useful thing your package can do.
-> Make it as short as possible! You have an entire set of docs for later.
+Create all of the files required for a pub quiz by creating a ``quiz.yaml`` file and then running the command
+```shell
+pubquiz make quiz.yaml
+```
+
+For example ``quiz.yaml`` files see the documentation.
 
 ### Command Line Interface
 
 The pubquiz command line tool is automatically installed. It can
-be used from the shell with the `--help` flag to show all subcommands:
-
-```shell
-pubquiz --help
-```
-
-> TODO show the most useful thing the CLI does! The CLI will have documentation auto-generated
-> by `sphinx`.
+be used from the shell with the `--help` flag to show all subcommands.
 
 ## 🚀 Installation
 
-<!-- Uncomment this section after your first ``tox -e finish``
 The most recent release can be installed from
 [PyPI](https://pypi.org/project/pubquiz/) with:
 
 ```shell
 pip install pubquiz
 ```
--->
 
 The most recent code and data can be installed directly from GitHub with:
 
