@@ -19,7 +19,7 @@ class Question:
 
     def __repr__(self):
         return self.question + " (" + self.answer + ")"
-    
+
     @classmethod
     def from_dict(cls, dct):
         """Create a question object from a dictionary."""
@@ -63,4 +63,4 @@ class Question:
                 lines += [r"\\", r"\onslide<2->{\vspace{1em}\textit{" + self.answer + "}}"]
         lines += [r"\end{center}", r"\end{frame}"]
 
-        return lines
+        return '\n'.join(lines)

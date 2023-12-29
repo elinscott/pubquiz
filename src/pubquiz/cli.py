@@ -17,6 +17,8 @@ import logging
 
 import click
 
+from pubquiz import Quiz
+
 __all__ = [
     "main",
 ]
@@ -29,6 +31,31 @@ logger = logging.getLogger(__name__)
 def main():
     """CLI for pubquiz."""
 
+
+valid_outputs=['question_sheets', 'answer_sheets', 'slides']
+
+# Make a pub quiz from a yaml file
+@main.command()
+@click.argument("yaml_file", type=click.Path(exists=True))
+@click.argument("output", type=click.Choice(valid_outputs + ['all']), default="all")
+def make(yaml_file, output):
+    """Make a pub quiz from a yaml file."""
+    if output == 'all':
+        outputs = valid_outputs
+    else:
+        outputs = [output]
+
+    quiz = Quiz.from_yaml(yaml_file)
+
+    for o in outputs:
+        if o == 'question_sheets':
+            string = quiz.to_sheets()
+        if o == 'answer_sheets':
+            string = quiz.to_sheets(answers=True)
+        elif o == 'slides':
+            string = quiz.to_slides()
+        with open(f'{o}.tex', 'w') as f:
+            f.write(string)
 
 if __name__ == "__main__":
     main()

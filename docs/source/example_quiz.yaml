@@ -1,5 +1,6 @@
 ---
 title: My First Quiz
+author: Firstname Lastname
 rounds:
   - title: First Round
     description: Testing, testing

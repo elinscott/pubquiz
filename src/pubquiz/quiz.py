@@ -3,26 +3,25 @@
 from collections import UserList
 from pathlib import Path
 from typing import List, Optional
+import shutil
 
 from yaml import safe_load
 
-from pubquiz.latex_templates import beamer_header, beamer_preamble, latex_header
 from pubquiz.round import Round
+from pubquiz.latex_templates import path as latex_templates_path
 
 
 class Quiz(UserList):
     """Class representing a pub quiz."""
 
-    def __init__(
-        self, title, rounds: Optional[List[Round]] = None, slides_preamble: Optional[Path] = None
-    ):
+    def __init__( self, title, author: str, date: str = r'\today', rounds: Optional[List[Round]] = None):
         """Initialize the quiz."""
 
         rounds = rounds or []
         super().__init__(rounds)
         self.title = title
-        if slides_preamble is None:
-            slides_preamble = beamer_preamble
+        self.author = author
+        self.date = date
 
     def __repr__(self) -> str:
         return f"Quiz(title={self.title}, rounds=[{', '.join([r.title for r in self])}])"
@@ -49,6 +48,12 @@ class Quiz(UserList):
 
         :returns: a list of strings containing the latex code for the quiz sheets
         """
+
+        # Make sure we have sheets_header.tex in the current directory
+        if not Path("sheets_header.tex").exists():
+            shutil.copy(latex_templates_path / 'sheets_header.tex', '.')
+            print('Generating a default sheets_header.tex file. Please edit this file to suit your needs.')
+            
         # N.B. will not do picture and puzzle rounds, these must be contained in pictures.tex and puzzles.tex
         titlepage = (
             [
@@ -68,7 +73,7 @@ class Quiz(UserList):
                 r"Round & Score \\",
                 r"\hline",
             ]
-            + [r.title + r" & \\" for r in self.rounds]
+            + [r.title + r" & \\" for r in self]
             + [
                 r"Picture: Overpaid & \\",
                 r"Puzzles: Connect four & \\",
@@ -81,13 +86,13 @@ class Quiz(UserList):
         )
 
         # Header
-        lines = latex_header + [r"\begin{document}"]
+        lines = [r"\input{sheets_header}", r"\begin{document}"]
 
         if not answers:
             lines += titlepage
 
         # Standard rounds
-        for i, r in enumerate(self.rounds):
+        for i, r in enumerate(self):
             lines += [
                 r"\newpage",
                 r"\begin{center}",
@@ -102,22 +107,21 @@ class Quiz(UserList):
                 lines += [r.description]
             if answers:
                 lines += [r"\large", r"\begin{enumerate}"]
-                lines += [r"\item " + str(q) for q in r.questions]
+                lines += [r"\item " + str(q) for q in r]
                 lines += [r"\end{enumerate}", r"\LARGE"]
             else:
                 lines += [r"\Huge", r"\begin{enumerate}"]
-                lines += [r"\item" for q in r.questions]
+                lines += [r"\item" for q in r]
                 lines += [r"\end{enumerate}", ""]
 
-        # Picture and puzzle
-        for _ in ["pictures", "puzzles"]:
-            raise NotImplementedError()  # noqa
-            # if answers:
-            #     os.system(f"cp {r}.tex {r}_with_answers.tex")
-            #     os.system(f"sed -i -e 's/%%//g' {r}_with_answers.tex")
-            #     os.system(f"sed -i -e 's/Large/large/g' {r}_with_answers.tex")
-            #     r += "_with_answers"
-            # lines += [r"\newpage", r"\Huge", "\input{" + r + ".tex}"]
+        # # Picture and puzzle
+        # for _ in ["pictures", "puzzles"]:
+        #     # if answers:
+        #     #     os.system(f"cp {r}.tex {r}_with_answers.tex")
+        #     #     os.system(f"sed -i -e 's/%%//g' {r}_with_answers.tex")
+        #     #     os.system(f"sed -i -e 's/Large/large/g' {r}_with_answers.tex")
+        #     #     r += "_with_answers"
+        #     # lines += [r"\newpage", r"\Huge", "\input{" + r + ".tex}"]
 
         # Footer
         lines += [r"\end{document}"]
@@ -128,15 +132,30 @@ class Quiz(UserList):
         #    fname = "answer_sheets.tex"
         # with open(fname, "w") as f:
         #    f.write("\n".join(lines))
-        return lines
+        return '\n'.join(lines)
 
     def to_slides(self):
         """Generate the latex code for the quiz slides."""
+
+        # Ensure we have the header and preamble
+        if not Path("slides_header.tex").exists():
+            shutil.copy(latex_templates_path / 'slides_header.tex', '.')
+            print('Generating a default slides_header.tex file. Please edit this file to suit your needs.')
+        if not Path("photo.png").exists():
+            shutil.copy(latex_templates_path / 'photo.png', '.')
+            print('Generating a default photo.png file to use in the title slide. Please replace this file to suit your needs.')
+        if not Path("slides_preamble.tex").exists():
+            shutil.copy(latex_templates_path / 'slides_preamble.tex', '.')
+            print('Generating a default slides_preamble.tex file. Please edit this file to suit your needs.')
+
         # Header
-        lines = beamer_header + [r"\begin{document}", r"\include{preamble}"]
+        lines = [r"\input{slides_header}", r"\title{" + self.title + "}", r"\author{" + self.author + "}"]
+        date = self.date or r"\today"
+        lines += [r"\date{" + date + "}"]
+        lines += [r"\begin{document}", r"\include{slides_preamble}"]
 
         # Standard rounds
-        for i, r in enumerate(self.rounds):
+        for i, r in enumerate(self):
             # Questions
             lines += [
                 r"\begin{frame}",
@@ -146,8 +165,8 @@ class Quiz(UserList):
                 r"\end{center}",
                 r"\end{frame}",
             ]
-            for iq, q in enumerate(r.questions):
-                lines += q.as_slide(index=iq + 1)
+            for iq, q in enumerate(r):
+                lines.append(q.to_slide(index=iq + 1))
 
             # Answers
             lines += [
@@ -160,12 +179,11 @@ class Quiz(UserList):
             ]
             if r.title == "Underworked":
                 continue
-            for iq, q in enumerate(r.questions):
-                lines += q.as_slide(index=iq + 1, with_answer=True)
+            for iq, q in enumerate(r):
+                lines.append(q.to_slide(index=iq + 1, with_answer=True))
 
         # Footer
         lines += [r"\include{picture_slides}"]
         lines += [r"\end{document}"]
 
-        with open("slides.tex", "w") as f:
-            f.write("\n".join(lines))
+        return "\n".join(lines)

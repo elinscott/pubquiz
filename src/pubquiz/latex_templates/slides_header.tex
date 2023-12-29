@@ -1,0 +1,52 @@
+\documentclass[xcolor=table,aspectratio=169]{beamer}
+
+% General settings
+\usetheme{Madrid}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+
+% Remove navigation symbols
+\beamertemplatenavigationsymbolsempty
+
+% Fonts
+\usepackage{helvet}
+\setbeamerfont{normal text}{family=helvet}
+\setbeamerfont{local structure}{family=helvet}
+
+% Colors
+\definecolor{kgrey}{HTML}{2b2828}
+\setbeamercolor{frametitle}{bg=kgrey,fg=white}
+\setbeamercolor{block title}{bg=kgrey,fg=white}
+
+% Templates
+\setbeamertemplate{enumerate items}[default]
+\setbeamertemplate{blocks}[default]
+\setbeamertemplate{itemize items}{\normalsize $\bullet$}
+\setbeamertemplate{frametitle}{}
+\setbeamertemplate{footline}{}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,hooks}
+\tcbset{colframe=structure,fonttitle=\bfseries,beamer, clip upper, boxsep=0pt, sharp corners=all, no shadow, left skip=0pt, right skip=0pt, coltext=white}
+\setbeamertemplate{title page}
+{
+  \leavevmode%
+  \vbox{%
+  \vspace{-1.6ex}%
+  \noindent\begin{tcolorbox}[enhanced,watermark graphics=photo.png, width=\paperwidth, height=0.575\paperwidth, watermark zoom=1.25, grow to left by=0.035\paperwidth, frame hidden]
+
+  \vspace{7.5em}
+  \begin{center} 
+  \huge
+  \textbf{\inserttitle}
+
+  \end{center}
+  \end{tcolorbox}
+
+  \vspace{-2em}
+  \begin{tcolorbox}[width=\paperwidth, enhanced, colback=kgrey, grow to left by=0.035\paperwidth,]
+  \begin{center}
+  \footnotesize \bf \insertauthor\quad | \quad \insertdate    
+  \end{center}
+  \end{tcolorbox}
+  }
+}
