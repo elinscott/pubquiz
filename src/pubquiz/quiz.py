@@ -17,18 +17,28 @@ class Quiz(UserList):
         self, title, rounds: Optional[List[Round]] = None, slides_preamble: Optional[Path] = None
     ):
         """Initialize the quiz."""
+
         rounds = rounds or []
         super().__init__(rounds)
         self.title = title
         if slides_preamble is None:
             slides_preamble = beamer_preamble
 
+    def __repr__(self) -> str:
+        return f"Quiz(title={self.title}, rounds=[{', '.join([r.title for r in self])}])"
+
+    @classmethod
+    def from_dict(cls, dct):
+        """Create a quiz object from a dictionary."""
+        rounds = dct.pop("rounds", [])
+        return cls(**dct, rounds=[Round.from_dict(r) for r in rounds])
+
     @classmethod
     def from_yaml(cls, filename: Path):
         """Create a quiz object from a yaml file."""
         with open(filename, "r") as f:
-            data = safe_load(f)
-        return cls(**data)
+            dct = safe_load(f)
+        return cls.from_dict(dct)
 
     def to_sheets(self, answers=False):
         """

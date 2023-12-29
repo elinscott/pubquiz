@@ -19,6 +19,11 @@ class Question:
 
     def __repr__(self):
         return self.question + " (" + self.answer + ")"
+    
+    @classmethod
+    def from_dict(cls, dct):
+        """Create a question object from a dictionary."""
+        return cls(**dct)
 
     def to_slide(self, index, with_answer=False):
         """Generate the LaTeX code for a slide presenting this question."""

@@ -1,14 +1,14 @@
 ---
-title: 
+title: My First Quiz
 rounds:
-  - First Round:
-      description: testing, testing
-      questions:
-         - question: "Hello?"
-           answer: "World!" 
-  - Second Round:
-      description: one two, one two
-      questions:
-         - question: "Hello again?"
-           answer: "World again!" 
+  - title: First Round
+    description: Testing, testing
+    questions:
+       - question: "Hello?"
+         answer: "World!" 
+  - title: Second Round
+    description: One two, one two
+    questions:
+       - question: "Hello again?"
+         answer: "World again!" 
         

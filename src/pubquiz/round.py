@@ -17,7 +17,13 @@ class Round(UserList):
         self.description = description
 
     def __repr__(self):
-        return "\n".join([self.title] + [self.description] + [str(q) for q in self])
+        return f'Round(title={self.title})'
+
+    @classmethod
+    def from_dict(cls, dct):
+        """Create a round object from a dictionary."""
+        questions = dct.pop("questions", [])
+        return cls(**dct, questions=[Question.from_dict(q) for q in questions])
 
     def shuffle(self):
         """Shuffle the questions in the round."""
