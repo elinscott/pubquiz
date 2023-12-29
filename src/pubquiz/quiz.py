@@ -152,7 +152,7 @@ class Quiz(UserList):
         lines = [r"\input{slides_header}", r"\title{" + self.title + "}", r"\author{" + self.author + "}"]
         date = self.date or r"\today"
         lines += [r"\date{" + date + "}"]
-        lines += [r"\begin{document}", r"\include{slides_preamble}"]
+        lines += [r"\begin{document}", r"\include{slides_preamble}", r"\frame{\titlepage}"]
 
         # Standard rounds
         for i, r in enumerate(self):
