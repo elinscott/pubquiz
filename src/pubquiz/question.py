@@ -18,7 +18,7 @@ class Question:
     answer_pic_height: float = 0.6
 
     def __post_init__(self):
-        if Path(self.question).exists():
+        if self.question and Path(self.question).exists():
             self.question = r"\input{" + self.question + "}"
         if self.slide and Path(self.slide).exists():
             self.slide = r"\input{" + self.slide + "}"

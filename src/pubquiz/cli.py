@@ -33,14 +33,14 @@ def main():
     """CLI for pubquiz."""
 
 
-valid_outputs = ["question_sheets", "answer_sheets", "slides"]
+valid_outputs = ["sheets", "slides"]
 
 
 # Make a pub quiz from a yaml file
 @main.command()
 @click.argument("yaml_file", type=click.Path(exists=True))
 @click.argument("output", type=click.Choice(valid_outputs + ["all"]), default="all")
-@click.option("--no-compile", default=False, help="Do not compile the output files.")
+@click.option("--no-compile", is_flag=True, default=False, help="Do not compile the output files.")
 def make(yaml_file, output, no_compile):
     """Make a pub quiz from a yaml file."""
     if output == "all":
@@ -51,17 +51,22 @@ def make(yaml_file, output, no_compile):
     quiz = Quiz.from_yaml(yaml_file)
 
     for o in outputs:
-        if o == "question_sheets":
+        if o == "sheets":
             string = quiz.to_sheets()
-        if o == "answer_sheets":
-            string = quiz.to_sheets(with_answers=True)
         elif o == "slides":
             string = quiz.to_slides()
         with open(f"{o}.tex", "w") as f:
             f.write(string)
 
         if not no_compile:
-            subprocess.run(["pdflatex", f"{o}.tex"])  # noqa: S607
+            proc = subprocess.run(
+                ["pdflatex", "-interaction=nonstopmode", f"{o}.tex"], stdout=subprocess.DEVNULL
+            )
+            if proc.returncode != 0:
+                logger.error(
+                    f"'pdflatex {o}.tex' returned non-zero exit code. Try running pdflatex manually to "
+                    "see what went wrong."
+                )
 
 
 if __name__ == "__main__":

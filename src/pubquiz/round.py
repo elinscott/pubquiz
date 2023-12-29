@@ -1,6 +1,7 @@
 """Module for the Round class."""
 
 from collections import UserList
+from pathlib import Path
 from random import shuffle
 from typing import List, Optional
 
@@ -18,6 +19,7 @@ class Round(UserList):
         questions: Optional[List[Question]] = None,
         solve_in_own_time: bool = False,
         randomize: bool = False,
+        sheets: Optional[Path] = None,
     ):
         """Initialize the round."""
         questions = questions or []
@@ -28,6 +30,7 @@ class Round(UserList):
         self.description = description
         self.solve_in_own_time = solve_in_own_time
         self.randomize = randomize
+        self.sheets = sheets
 
     def __repr__(self):
         return f"Round(title={self.title})"
@@ -39,6 +42,10 @@ class Round(UserList):
         return cls(**dct, questions=[Question.from_dict(q) for q in questions])
 
     def _sheets_content(self, with_answers: bool = True) -> List[str]:
+        """Generate the LaTeX code for the body of the sheet for this round, either with or without the answers."""
+        if self.sheets:
+            return [r"\input{" + str(self.sheets) + "}"]
+
         lines = []
         if with_answers:
             lines += [r"\large", r"\begin{enumerate}"]
@@ -63,10 +70,7 @@ class Round(UserList):
         header = self.title if ":" in self.title else f"Round {index}: {self.title}"
         lines = [r"\newpage", r"\begin{center}", r"\Huge", header, r"\end{center}"]
 
-        if self.solve_in_own_time:
-            lines += [r"\large"]
-        else:
-            lines += [r"\LARGE"]
+        lines += [r"\large"]
 
         if len(self.description) > 0:
             lines += [self.description, ""]
