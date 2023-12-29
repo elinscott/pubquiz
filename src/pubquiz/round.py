@@ -11,6 +11,7 @@ class Round(UserList):
     """Class representing a round in a pub quiz."""
 
     def __init__(self, title, description="", questions: Optional[List[Question]] = None):
+        """Initialize the round."""
         questions = questions or []
         super().__init__(questions)
         self.title = title
