@@ -1,0 +1,285 @@
+\documentclass[xcolor=table,aspectratio=169]{beamer}
+\usetheme{Madrid}
+\usepackage{adjustbox}
+%\usetheme{metropolis}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+
+\definecolor{twitter_blue}{HTML}{1da1f2}
+\input{seaborn_colours.tex}
+
+% "blindfootcite" is the equivalent of "footcite" except the number marker does not appear
+\newcommand\blfootcite[1]{%
+  \begingroup
+  \renewcommand\thefootnote{}\footnote{\hspace{-4ex}\cite{#1}}%
+  \addtocounter{footnote}{-1}%
+  \endgroup
+}
+\setbeamerfont{footnote}{size=\scriptsize}
+\renewcommand\footnoterule{\kern-3pt \color{seaborn_bg_grey_darker}\hrule width \textwidth height 0.4pt \color{black} \kern 2.6pt}
+
+\beamertemplatenavigationsymbolsempty
+
+% \renewcommand*{\bibfont}{\tiny}
+\usepackage{amssymb}
+\usepackage{epsfig}
+\usepackage{psfrag}
+\usepackage{wrapfig}
+\usepackage{graphicx}
+\usepackage{color}
+\usepackage[table]{xcolor}
+\usepackage{amsmath}
+\usepackage{multimedia}
+\usepackage{subcaption}
+%\usepackage{style}
+\usepackage{verbatim}
+\usepackage{multicol}
+\usepackage[table]{xcolor}
+\usepackage{tabularx}
+% Tikz
+\usepackage{tikz}
+\usetikzlibrary{positioning,shapes,arrows,backgrounds,fit,calc,external,trees,tikzmark}
+% \tikzexternalize[prefix=tikzfigures/]
+\tikzstyle{dummy} = []
+\tikzstyle{line} = [draw, thick, -latex']
+\tikzstyle{headless_line} = [draw, thick, -]
+\tikzstyle{default}    = [rectangle, text centered, rounded corners, text=black, font=\sffamily\footnotesize, align=center]
+\tikzstyle{default_text}    = [rectangle, text width=10cm, text=black,anchor=north west, font=\sffamily]
+\tikzstyle{boxwhite} = [default, fill=white, rounded corners=0.1cm]
+\tikzstyle{cp}    = [default, fill=seaborn_blue, text=white, text width=2.8cm, minimum height=0.5cm]
+\tikzstyle{pw}    = [cp, fill=seaborn_green]
+\tikzstyle{wannier90}    = [cp, fill=seaborn_cyan]
+\tikzstyle{bespoke}    = [cp, fill=seaborn_magenta]
+\tikzstyle{observable}    = [cp, fill=seaborn_red]
+\tikzset{
+  -|-/.style={
+    to path={
+      (\tikztostart) -| ($(\tikztostart)!#1!(\tikztotarget)$) |- (\tikztotarget)
+      \tikztonodes
+    }
+  },
+  -|-/.default=0.5,
+  |-|/.style={
+    to path={
+      (\tikztostart) |- ($(\tikztostart)!#1!(\tikztotarget)$) -| (\tikztotarget)
+      \tikztonodes
+    }
+  },
+  |-|/.default=0.5,
+}
+
+\newlength{\myyshift}
+\setlength{\myyshift}{0.05cm}
+
+\usepackage{lipsum}
+\usetikzlibrary{calc}
+\newlength{\myfigscale}
+\setlength{\myfigscale}{0.3cm}
+\usepackage{smartdiagram}
+\usesmartdiagramlibrary{additions}
+\usepackage{multicol}
+\usepackage{helvet}
+% \usepackage{sansmath}
+% \sansmath
+\usepackage{cancel} % for \cancel
+\usepackage[normalem]{ulem} % for sout (strike out)
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,hooks}
+\tcbset{colframe=structure,fonttitle=\bfseries,beamer, clip upper, boxsep=0pt, sharp corners=all, no shadow, left skip=0pt, right skip=0pt, coltext=white}
+
+% For electron orbital diagrams
+\usepackage{tikzorbital}
+% Changing defaults
+\pgfkeys{tikzorbital/drawLevel/width = 0.666666}
+\pgfkeys{tikzorbital/drawLevel/style = {line width = 1pt, color = black!80, line cap = round}}
+\pgfkeys{tikzorbital/drawLevel/spinlength = 0.666666}
+\pgfkeys{tikzorbital/drawLevel/spinstyle = {very thick, color = black!80, -stealth}}
+
+\input{seaborn_colours.tex}
+
+% For tikz diagrams with nodes appearing on each slide
+\tikzset{
+  invisible/.style={opacity=0},
+  visible on/.style={alt={#1{}{invisible}}},
+  alt/.code args={<#1>#2#3}{%
+    \alt<#1>{\pgfkeysalso{#2}}{\pgfkeysalso{#3}} % \pgfkeysalso doesn't change the path
+  },
+}
+
+\usepackage{array}
+\usepackage{multirow}
+% \newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+% \newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+% \newcolumntype{R}[1]{>{\raggedleft\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{L}{>{\raggedright\arraybackslash}X}
+\newcolumntype{C}{>{\centering\arraybackslash}X}
+\newcolumntype{R}{>{\raggedleft\arraybackslash}X}
+
+% For checklist
+%\usepackage{enumitem}
+%\newlist{todolist}{itemize}{2}
+%\setlist[todolist]{label=$\square$}
+\usepackage{pifont}
+\newcommand{\cmark}{\ding{51}}%
+\newcommand{\xmark}{\ding{55}}%
+\newcommand{\done}{\rlap{$\square$}{\raisebox{2pt}{\large\hspace{1pt}\cmark}}%
+\hspace{-2.5pt}}
+\newcommand{\wontfix}{\rlap{$\square$}{\large\hspace{1pt}\xmark}}
+
+\newcommand{\bra}[1]{\langle #1|}
+\newcommand{\braket}[2]{\langle #1|#2\rangle}
+\newcommand{\braopket}[3]{\langle #1|#2|#3\rangle}
+\newcommand{\ket}[1]{|#1\rangle}
+\newcommand{\nline}{\nonumber \\}
+\newcommand{\Trace}{\mathsf{Tr}}
+
+\renewcommand{\ttdefault}{pcr} % enables bold fixed width font
+\numberwithin{equation}{section}
+% \usefonttheme{professionalfonts}
+%\usefonttheme[stillsansseriflarge,stillsansserifsmall]{serif}
+\usepackage{siunitx,booktabs}
+% \AtBeginDocument{\sisetup{math-rm=\mathsf, text-rm=\sffamily}}
+\AtBeginEnvironment{frame}{\setcounter{footnote}{0}}
+
+\newlength{\myimscale}
+
+
+% For code blocks in latex
+% Taken from https://github.com/daveyarwood/gruvbox-pygments
+% N.B.
+%  - frame must have [fragile]
+%  - use \begin{onlyenv} not \only
+%  - after a lot of mucking around, I created gruvbox_plain as another style
+%    that exclusively uses gruvbox's bg and fg with no syntax highlighting
+%  - use [autogobble] to remove leading indentations
+
+\usepackage{minted}
+\usemintedstyle{gruvbox-dark}
+\definecolor{gruvbox_dark_bg}{HTML}{282828}
+\definecolor{gruvbox_fg}{HTML}{ebdbb2}
+\definecolor{kgrey}{HTML}{2b2828}
+\setminted[python]{bgcolor=gruvbox_dark_bg}
+\setminted[json]{bgcolor=gruvbox_dark_bg}
+\setminted[shell-session]{style=gruvbox_plain, bgcolor=gruvbox_dark_bg}
+
+% \lstset{breaklines,breakatwhitespace,breakautoindent=false,showstringspaces=false}
+% \lstset{keywordstyle=\color{purple}}
+% \lstset{identifierstyle=\color{blue}}
+% \lstset{basicstyle=\fontfamily{pcr}\fontsize{9pt}{9pt}\selectfont}
+% %\lstset{numbers=left, numberstyle=\tiny, stepnumber=1, numbersep=5pt}
+% \lstset{linewidth=4.9in,xleftmargin=10pt}
+
+\setbeamercolor{frametitle}{bg=kgrey,fg=white}
+\setbeamerfont{normal text}{family=helvet}
+\setbeamerfont{local structure}{family=helvet}
+
+\setbeamercolor*{author in head/foot}{bg=seaborn_blue}
+\setbeamercolor*{logo in head/foot}{bg=seaborn_blue,fg=white}
+\setbeamercolor*{title in head/foot}{bg=seaborn_blue,fg=white}
+\setbeamercolor*{date in head/foot}{bg=seaborn_blue,fg=white}
+\setbeamercolor{title}{bg=seaborn_blue}
+\setbeamercolor{under headline}{bg=seaborn_red}
+\setbeamercolor{footline}{bg=seaborn_blue}
+\setbeamercolor{caption name}{fg=seaborn_blue}
+\setbeamercolor{block title}{bg=kgrey,fg=white}
+\setbeamercolor{block body}{bg=seaborn_bg_grey,fg=black}
+
+% Footnote style and colour
+% No line over footnote
+\setbeamercolor{footnote}{fg=seaborn_bg_grey_darker}
+
+\setbeamertemplate{enumerate items}[default]
+\setbeamertemplate{blocks}[default]
+\setbeamertemplate{itemize items}{\normalsize $\bullet$}
+\setbeamercolor{description item}{fg=seaborn_blue}
+\setbeamercolor{enumerate item}{fg=seaborn_blue}
+\setbeamercolor{itemize item}{fg=seaborn_blue}
+\setbeamercolor{itemize subitem}{fg=seaborn_blue}
+\setbeamercolor{itemize subsubitem}{fg=seaborn_blue}
+\setbeamercolor*{bibliography entry title}{fg=seaborn_bg_grey_darker}
+\setbeamercolor*{bibliography entry author}{fg=seaborn_bg_grey_darker}
+\setbeamercolor*{bibliography entry location}{fg=seaborn_bg_grey_darker}
+\setbeamercolor*{bibliography entry note}{fg=seaborn_bg_grey_darker}
+% and kill the abominable icon
+\setbeamertemplate{bibliography item}[text]
+
+\setbeamerfont*{title in head/foot}{size=\small}
+\setbeamerfont*{date in head/foot}{size=\small}
+\setbeamerfont*{institute}{size=\Large}
+
+\setbeamertemplate{frametitle}
+{
+  \leavevmode%
+  \vspace{-20pt}
+  \begin{beamercolorbox}[wd=\paperwidth,ht=1cm]{frametitle}
+   \hspace{0.115em}
+   \vphantom{P/p} \bf \insertframetitle \vspace{0.2cm}
+   \end{beamercolorbox}%
+  %  \vskip-0.6cm%
+  % \begin{beamercolorbox}[wd=\paperwidth,ht=0.5ex]{under headline}%
+  %   \end{beamercolorbox}%
+	
+}
+
+\newcommand{\insertframeinfo}{| \insertframenumber/\inserttotalframenumber}
+\newcommand{\backupbegin}{
+   \newcounter{finalframe}
+   \setcounter{finalframe}{\value{framenumber}}
+   \renewcommand{\insertframeinfo}{}
+}
+\newcommand{\backupend}{
+   \setcounter{framenumber}{\value{finalframe}}
+}
+
+
+\setbeamertemplate{frametitle}
+{
+%   \vspace{-1pt}
+%   \begin{beamercolorbox}[wd=\paperwidth,ht=0.8cm]{frametitle}
+%    \hspace{0.05em}
+%    \begin{minipage}{0.8\textwidth}
+%      \bf \insertframetitle\vphantom{Pp}
+%    \end{minipage}
+%    \hfill
+%    \vspace{0.125cm}
+%   \end{beamercolorbox}%
+}
+
+\setbeamertemplate{title page}
+{
+  \leavevmode%
+  \vbox{%
+  \vspace{-1.6ex}%
+  \noindent\begin{tcolorbox}[enhanced,watermark graphics=photos/EPFL-Leman-vue-aerienne-1536x864.jpg, width=\paperwidth, height=0.575\paperwidth, watermark zoom=1.25, grow to left by=0.035\paperwidth, frame hidden]
+
+  \vspace{7.5em}
+  \begin{center} 
+  \huge
+  \textbf{\inserttitle}
+
+  \end{center}
+  \end{tcolorbox}
+
+  \vspace{-2em}
+  \begin{tcolorbox}[width=\paperwidth, enhanced, colback=kgrey, grow to left by=0.035\paperwidth,]
+  \begin{center}
+  \footnotesize \bf \insertauthor\quad | \quad \insertdate    
+  \end{center}
+  %  \end{flushright}
+  \end{tcolorbox}
+  }
+
+
+	
+}
+%\setbeamerfont{frametitle}{series=\bfseries}
+\setbeamertemplate{footline}
+{
+}
+
+% Title slide %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \title[Beamer Intro]{\noindent Strongly correlated biological systems\\\Large DFT and beyond}
+\title{THEOS pub quiz}
+\author{Edward Linscott}
+\institute{EPFL}
+\date{27 Oct 2023}

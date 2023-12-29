@@ -2,4 +2,4 @@
 
 """Python utilities for writing pub quizzes."""
 
-from .api import *  # noqa
+from .quiz import Quiz
