@@ -138,7 +138,6 @@ class Quiz(UserList):
             lines += r.to_slides(index=i + 1)
 
         # Footer
-        lines += [r"\include{picture_slides}"]
         lines += [r"\end{document}"]
 
         return "\n".join(lines)
