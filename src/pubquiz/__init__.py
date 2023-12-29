@@ -2,4 +2,4 @@
 
 """Python utilities for writing pub quizzes."""
 
-from .quiz import Quiz
+from .quiz import Quiz  # noqa: F401
