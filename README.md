@@ -29,16 +29,31 @@
         <img src="https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg" alt="Contributor Covenant"/></a>
 </p>
 
-Python utilities for writing pub quizzes
+Python utilities for creating slides and answer booklets for pub quizzes.
 
 ## 💪 Getting Started
 
-Create all of the files required for a pub quiz by creating a ``quiz.yaml`` file and then running the command
+Create all of the files required for a pub quiz by putting all your questions in a ``quiz.yaml`` file and then running the command
 ```shell
 pubquiz make quiz.yaml
 ```
 
-For example ``quiz.yaml`` files see the documentation.
+Of course, the ``quiz.yaml`` contents need to follow a given structure; here is an example:
+
+```yaml
+title: My First Quiz
+author: Firstname Lastname
+rounds:
+  - title: First Round
+    questions:
+       - question: "Hello?"
+         answer: "World!" 
+  - title: Second Round
+    description: Here I explain how this round works
+    questions:
+       - question: "Testing, testing"
+         answer: "One two, one two"
+```
 
 ### Command Line Interface
 
