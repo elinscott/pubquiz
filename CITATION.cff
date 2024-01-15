@@ -3,6 +3,6 @@ message: "If you use this software, please cite it as below."
 title: "pubquiz"
 authors:
   - name: "Edward Linscott"
-version: 0.0.5-dev
+version: 0.0.5
 doi:
 url: "https://github.com/elinscott/pubquiz"
