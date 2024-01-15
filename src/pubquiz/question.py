@@ -23,6 +23,8 @@ class Question:
     def __post_init__(self):
         if self.question and Path(self.question).exists():
             self.question = r"\input{" + self.question + "}"
+        if self.answer and Path(self.answer).exists():
+            self.answer = r"\input{" + self.answer + "}"
         if self.question_slide and Path(self.question_slide).exists():
             self.question_slide = r"\input{" + self.question_slide + "}"
         if self.answer_slide and Path(self.answer_slide).exists():
